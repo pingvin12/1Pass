@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@types/node": "18.11.10",
@@ -17,6 +18,10 @@
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-moving-text": "^0.0.7",
     "typescript": "4.9.3"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.1"
   }
 }

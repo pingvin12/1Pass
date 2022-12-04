@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -17,7 +18,7 @@ export default function Home() {
 
         <p className={styles.description}>
           Get started by trying out the tutorial.
-          <br/>You can login <a href='/login'>here</a> or register <a href='/register'>here</a>
+          <br/>You can login <Link href='/login'>here</Link> or register <Link href='/register'>here</Link>
         </p>
 
         <div className={styles.grid}>

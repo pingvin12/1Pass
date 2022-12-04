@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@agney/react-loading": "^0.1.2",
+    "@govuk-react/input-field": "^0.10.5",
     "@types/node": "18.11.10",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",

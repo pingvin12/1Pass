@@ -17,6 +17,7 @@ export default function Home() {
 
         <p className={styles.description}>
           Get started by trying out the tutorial.
+          <br/>You can login <a href='/login'>here</a> or register <a href='/register'>here</a>
         </p>
 
         <div className={styles.grid}>

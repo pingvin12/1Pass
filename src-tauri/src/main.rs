@@ -3,14 +3,12 @@
   windows_subsystem = "windows"
 )]
 
-mod encryption;
-mod utils;
+use app::db::encryption;
+
 
 fn main() {
   tauri::Builder::default()
       .invoke_handler(tauri::generate_handler![
-         encryption::encrypt_pass,
-            encryption::verify_pass,
             encryption::encrypt_data,
             encryption::decrypt_data,
             encryption::set_entry,

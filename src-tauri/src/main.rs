@@ -3,19 +3,14 @@
   windows_subsystem = "windows"
 )]
 
-use app::db::encryption;
+use app::db::database;
 
 
 fn main() {
   tauri::Builder::default()
       .invoke_handler(tauri::generate_handler![
-            encryption::encrypt_data,
-            encryption::decrypt_data,
-            encryption::set_entry,
-            encryption::get_entry,
-            encryption::receive_encryption_key,
-            encryption::set_encryption_key,
-            encryption::delete_entry,
+            database::auth_user,
+            database::register_user,
       ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

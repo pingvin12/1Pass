@@ -22,14 +22,15 @@ argon2 = "0.5"
 magic-crypt = "3.1.12"
 rand = "0.8.5"
 lazy-init = "0.5.1"
-postgrest = "1.5.0"
+diesel = { version = "1.4.5", features = ["postgres"] }
 keyring = "2"
 dotenv = "0.15.0"
 once_cell = "1.15.0"
+futures = "0.3.28"
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = [ "custom-protocol" ]
+default = ["custom-protocol"]
 # this feature is used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
-custom-protocol = [ "tauri/custom-protocol" ]
+custom-protocol = ["tauri/custom-protocol"]

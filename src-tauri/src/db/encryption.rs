@@ -53,7 +53,7 @@ pub fn decrypt_data(data: String) -> String {
 
     let decrypted_string = mc
         .decrypt_base64_to_string(data)
-        .unwrap_or_else(|error| "error".into());
+        .unwrap_or_else(|error| error.to_string().into());
 
     decrypted_string.into()
 }

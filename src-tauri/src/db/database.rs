@@ -1,61 +1,45 @@
 use dotenv::dotenv;
 use std::env;
-use postgrest::Postgrest;
-use super::encryption::{self, encrypt_password, verify_password};
+use diesel::prelude::*;
+use super::{encryption::{self, encrypt_password, verify_password}};
+use super::models::*;
+use crate::schema::*;
 
 struct Database {
-    client: Postgrest,
-    jwttoken: String,
+    connection: PgConnection
 }
 
+struct JwtToken {
+    token: String,
+    validtill: i32,
+}
 
 impl Database {
-    fn new() -> Self {
+    fn new() -> PgConnection {
         dotenv().ok();
-
-        let api_url = env::var("ENDPOINT").unwrap();
-        let api_key = env::var("API_KEY").unwrap();
-        let jwttoken = env::var("JWT_TOKEN").unwrap();
-        let client = Postgrest::new(api_url.as_str())
-            .insert_header("apikey", api_key);
-
-        Database { client, jwttoken }
+        let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
     }
 
-    async fn authenticate(&self, username: String, password: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let response = self.client
-            .from("users")
-            .auth(self.jwttoken.as_str())
-            .eq("username", username)
-            .select("password")
-            .execute().await?;
-        Ok(verify_password(password, response.text().await?))
+    fn authenticate(username: String, password: String) //-> JwtToken
+    {
+
     }
 
-    async fn register(&self, username: String, password: String) -> Result<bool, Box<dyn std::error::Error>> {
-        let password_modified = encrypt_password(password);
-        let response = self.client
-            .from("users")
-            .auth(self.jwttoken.as_str())
-            .insert(format!("[username: {},password: {}]", username.as_str(), password_modified.as_str()))
-            .execute().await?;
+    pub fn register(conn: &mut PgConnection, username: &str, password: &str, email: &str) -> Result<(), &'static str>
+    {
+        let new_user = RegisterUser { username, email, password };
 
-        Ok(response.status().is_success())
+        diesel::insert_into(users::table)
+            .values(&new_user)
+            .get_result(conn)
+            .expect("Error saving new post")
     }
 }
 
 #[tauri::command]
-pub async fn auth_user(username: String, password: String) -> bool
+pub async fn register_user(username: String, password: String, email: String)
 {
-    let connect = Database::new();
-    let res = connect.authenticate(username, password);
-    res.await.unwrap()
-}
-
-#[tauri::command]
-pub async fn register_user(username: String, password: String) -> bool
-{
-    let connect = Database::new();
-    let res = connect.register(username, password);
-    res.await.unwrap()
+    let mut connect = Database::new();
+    let res = Database::register(&mut connect, &username, &password, &email);
 }

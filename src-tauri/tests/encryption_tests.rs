@@ -1,7 +1,5 @@
-use app::db::encryption;
 pub mod encryption_tests {
     use app::db::encryption;
-
 
     #[test]
     pub fn encrypt_data_success() {
@@ -23,7 +21,7 @@ pub mod encryption_tests {
 
     #[test]
     pub fn decrypt_data_fail() {
-        let data = encryption::decrypt_data("2Tr/he/Nmf5Ix4woroGM+g!==".to_string());
+        let data = encryption::decrypt_data("M5JfgcQvCRVm+0Gfj6dIAA==".to_string());
         assert_ne!(data.to_string(), "wrong".to_string());
     }
 }

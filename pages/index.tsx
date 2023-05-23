@@ -1,8 +1,8 @@
 import React from "react"
 import Link from 'next/link'
-import Login from './Auth/login'
-import Register from "./Auth/register"
-import Home from "./Home/home"
+import Login from './login'
+import Register from "./register"
+import Home from "./home"
 
 function App() {
   return (

@@ -1,3 +1,5 @@
+use bcrypt::hash;
+use diesel::select;
 use dotenv::dotenv;
 use std::env;
 use diesel::associations::HasTable;
@@ -9,14 +11,17 @@ use super::models::*;
 use crate::schema::*;
 use crate::schema::users::dsl::users;
 use chrono::prelude::*;
+use bcrypt::{verify, DEFAULT_COST};
+use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+
 
 struct Database {
     connection: PgConnection
 }
 
-struct JwtToken {
-    token: String,
-    validtill: i32,
+pub struct JwtToken {
+    pub token: String,
+    pub validtill: i32,
 }
 
 impl Database {
@@ -26,32 +31,71 @@ impl Database {
         PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
     }
 
-    fn authenticate(conn: &mut PgConnection, username: &str, password: &str) -> JwtToken
-    {
-        JwtToken { token: "dsdfhisdg".to_string(), validtill: 86400 }
-    }
-
-    pub fn register(conn: &mut PgConnection, ins_username: String, ins_password: String, ins_email: String)
+    fn authenticate(conn: &mut PgConnection, username: &str, pwd: &str) -> Result<JwtToken, String>
     {
         use crate::schema::users::dsl::*;
-        let ins_user = vec![ NewUser { username: &ins_username, password: &ins_password, email: &ins_email }];
-        //let new_user = insert_into(users::table).values(&ins_user).execute(conn);
+        let mut user = users.filter(username.eq(username))
+        .first::<User>(conn)
+        .expect("Error while logging in");
+
+        //verify(pwd, &user.password);
+        //.map_err(|_| "Invalid u(sername or password".to_owned())?;
+        if(user.password.eq(pwd))
+        {
+            let token = encode(
+                &Header::default(),
+                &user,
+                &EncodingKey::from_secret("your-secret-key".as_ref()),
+            )
+            .map_err(|_| "Error generating JWT token")?;
+            Ok(JwtToken { token: token, validtill: 86400 })
+        } else {
+            Err("Bad username or password".to_owned())
+        }
+        }
+
+    pub fn register(conn: &PgConnection, ins_username: String, ins_password: String, ins_email: String) -> Result<bool, String>
+    {
+        use crate::schema::users::dsl::*;
+        let hashpass = hash(&ins_password, DEFAULT_COST).unwrap();
+        let new_user = vec![ models::NewUser { username: &ins_username, email: &ins_email, password: &ins_password } ];
+        
+        let reg: usize = insert_into(users)
+        .values(&new_user)
+        .execute(conn).unwrap();
+        if (reg > 0) {
+            Ok(true)
+        } else {
+            Err("eError while registering".to_string())
+        }
     }
-
-
 }
 
-#[tauri::command]
-pub async fn register_user(username: String, password: String, email: String)
+pub fn register(username: String, password: String, email: String) -> Result<bool, String>
 {
     let mut connect = Database::new();
     let res = Database::register(&mut connect, username, password, email);
+    Ok(res.unwrap())
 }
 
-#[tauri::command]
-pub async fn login_user(email: String, password: String)
+pub fn login(email: String, password: String) -> Result<JwtToken, String>
 {
     let mut connect = Database::new();
     let res = Database::authenticate(&mut connect, &email, &password);
+    match res {
+        Ok(token) => Ok(token),
+        Err(_err) => Err(_err),
+    }
 }
 
+#[tauri::command]
+pub fn command_register_user(username: String, password: String, email: String)
+{
+    let _ = register(username, password, email);
+}
+
+#[tauri::command]
+pub fn command_login_user(email: String, password: String)
+{
+    let _ = login(email, password);
+}

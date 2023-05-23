@@ -1,6 +1,7 @@
-use diesel::prelude::*;
-use serde::{Deserialize, Serialize};
-use crate::schema::users;
+use std::time::SystemTime;
+
+use serde::{Serialize};
+use crate::schema::{users};
 
 #[derive(Queryable, Serialize, Ord, Eq, PartialEq, PartialOrd)]
 pub struct User {
@@ -8,10 +9,10 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub password: String,
-    pub created_on: String,
+    pub created_at: SystemTime,
 }
 
-#[derive(Insertable, Deserialize)]
+#[derive(Insertable)]
 #[table_name = "users"]
 pub struct NewUser<'a> {
     pub username: &'a str,

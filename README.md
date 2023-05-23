@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, start docker:
+First, start postgres using docker:
 
 ```bash
 docker run --name OnePassDev -e POSTGRES_PASSWORD=OnePassDev -d postgres

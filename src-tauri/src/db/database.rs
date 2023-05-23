@@ -95,7 +95,7 @@ pub fn command_register_user(username: String, password: String, email: String)
 }
 
 #[tauri::command]
-pub fn command_login_user(email: String, password: String)
+pub fn command_login_user(email: String, password: String) -> String
 {
-    let _ = login(email, password);
+    login(email, password).unwrap().token
 }

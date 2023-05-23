@@ -40,13 +40,44 @@ nav {
 }
 
 .navigation-menu {
-    @apply container w-full flex flex-wrap items-center justify-between px-6
+    @apply container flex flex-wrap items-center justify-between
 }
+
 li {
-    @apply flex-1 py-4 mx-8 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 dark:md:hover:text-white md:hover:text-black md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer
+    width: 266.33px;
+    height: 47px;
+  
+    background: #D9D9D9;
+    mix-blend-mode: overlay;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 17px;
+    margin-left: 15px;
+    margin-right: 15px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+    z-index: 0;    
 }
+
+a {
+    position: relative;
+    height: 26px;
+    left: 25%;
+
+    font-family: 'Inria Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    margin: 20px;
+    color: #000000;
+}
+
 ul {
-    @apply flex mr-auto
+    @apply flex;
+    margin-left: 0px;
 }
 
 .profpic {

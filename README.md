@@ -5,7 +5,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, start postgres using docker:
 
 ```bash
-docker run --name OnePassDev -e POSTGRES_PASSWORD=OnePassDev -d postgres
+docker run --name OnePassDev -e POSTGRES_PASSWORD=123 -p 5432:5432 -d postgres
 ```
 
 Then start using npm:

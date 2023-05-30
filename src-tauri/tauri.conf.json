@@ -3,6 +3,7 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
+    "withGlobalTauri": true,
     "devPath": "http://localhost:4200",
     "distDir": "../out"
   },
@@ -58,7 +59,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Rodeo",
+        "title": "1Pass",
         "width": 800
       }
     ]

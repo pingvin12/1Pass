@@ -28,9 +28,30 @@ h1 {
 
 
 input {
-    @apply text-black bg-blend-lighten border-gray-500 rounded outline-none px-3 py-2 focus:border-gray-700 focus:shadow-[0_0_0_4px_#027DFF80] transition duration-300;
-}
-
+    /* Text and background color */
+    color: black;
+    background-color: #f8f8f8;
+  
+    /* Border */
+    border: 1px solid #a0a0a0;
+    border-radius: 4px;
+  
+    /* Spacing and padding */
+    padding: 0.5rem;
+    
+    /* Remove default outline */
+    outline: none;
+  
+    /* Transition and focus styles */
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  /* Input focus styles */
+  input:focus {
+    border-color: #666666;
+    box-shadow: 0 0 0 4px rgba(2, 125, 255, 0.5);
+  }
+  
 .profpic {
     @apply h-8 w-8 rounded-full
 }
@@ -46,61 +67,55 @@ nav {
 li {
     width: 266.33px;
     height: 47px;
-  
-    background: #D9D9D9;
+    background-color: #d9d9d9;
     mix-blend-mode: overlay;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 17px;
-    margin-left: 15px;
-    margin-right: 15px;
-
-    /* Inside auto layout */
+    margin: 0 15px;
+    display: flex;
     flex: none;
     order: 0;
     flex-grow: 1;
-    z-index: 0;    
-}
-
-a {
-    position: relative;
-    height: 26px;
-    left: 25%;
-
+    z-index: 0;
+  }
+  
+  li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     font-family: 'Inria Sans';
     font-style: normal;
     font-weight: 400;
     font-size: 20px;
     line-height: 24px;
-    margin: 20px;
     color: #000000;
-}
+    text-decoration: none;
+  }
 
 ul {
     @apply flex;
     margin-left: 0px;
 }
 
-.profpic {
-    @apply h-10 w-10 rounded-full cursor-pointer
+
+
+.navbar-logo {
+    margin-left: 50px;
 }
 
-path {
-    font-style:normal;
-    font-weight:500;
-    font-size:72px;
-    line-height:1;
-    font-family:'Raleway Medium Alt1';
-    font-variant-ligatures:none;
-    text-align:center;
-    text-anchor:middle
-}
-
-#slogan {
-    font-style:normal;font-weight:400;font-size:32px;line-height:1;font-family:Montserrat;font-variant-ligatures:none;text-align:center;text-anchor:middle
-}
-#title {
-    font-style:normal;font-weight:500;font-size:72px;line-height:1;font-family:'Raleway Medium Alt1';font-variant-ligatures:none;text-align:center;text-anchor:middle
-}
-.profholder {
-    
+.splash {
+    margin-top: 25vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    color: #333333;
 }

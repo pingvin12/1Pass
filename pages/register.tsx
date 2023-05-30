@@ -1,23 +1,44 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import SimpleReactValidator from 'simple-react-validator';
 
 // When using the Tauri API npm package:
 import { invoke } from '@tauri-apps/api/tauri'
+import { useState } from 'react';
 // When using the Tauri global script (if not using the npm package)
 // Be sure to set `build.withGlobalTauri` in `tauri.conf.json` to true
 const invoker = window.__TAURI__.invoke
 
 
 export default function Register() {
-  function completeForm() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    invoker('command_register_user', {
-      username: 'user',
-      password: 'password',
-      email: 'email'
-    }).then(() => {
-      console.log('test')
-    })
+  const validator = new SimpleReactValidator();
+
+
+  function completeForm() {
+    if (validator.allValid())
+    {
+      invoker('command_register_user', {
+        username: name,
+        password: password,
+        email: email
+      }).then(() => {
+        console.log('test')
+      })
+    } else {
+      validator.showMessages();
+      forceUpdate();
+    }
+    
+  }
+
+  const forceUpdate = () => {
+    setName(name);
+    setEmail(email);
+    setPassword(password);
   }
 
   return (
@@ -29,15 +50,18 @@ export default function Register() {
         </div>
           <div className="mb-4 text-lg">
             <input type="text" name="Email" placeholder="youremail@email.com" />
+            {<a>validator.message('email', email, 'required|email')</a>}
           </div>
           <div className="mb-4 text-lg">
             <input  type="text" name="Username" placeholder="Username" />
+            {<a>validator.message('name', name, 'required')</a>}
           </div>
           <div className="mb-4 text-lg">
             <input type="Password" name="Password" placeholder="*********" />
+            {<a>validator.message('password', password, 'required|min:8')</a>}
           </div>
           <div className="mt-8 flex justify-center text-lg text-black">
-            <button onClick={completeForm}>Register</button>
+            <button onClick={(e) => completeForm()}>Register</button>
           </div>
         
       </div>

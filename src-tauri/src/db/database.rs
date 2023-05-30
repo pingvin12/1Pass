@@ -89,10 +89,13 @@ pub fn login(email: String, password: String) -> Result<JwtToken, String>
 }
 
 #[tauri::command]
-pub fn command_register_user(username: String, password: String, email: String) -> Result<(), String>
+pub fn command_register_user(username: String, password: String, email: String) -> Result<bool, String>
 {
-    register(username, password, email).unwrap(); // map err to string
-    Ok(())
+    let res = register(username, password, email); // map err to string
+    match res {
+        Ok(result) => Ok(result),
+        Err(_err) => Err(_err),
+    }
 }
 
 #[tauri::command]

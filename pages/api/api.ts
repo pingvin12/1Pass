@@ -1,3 +1,3 @@
-import { invoke } from '@tauri-apps/api/tauri'
+import { invoke } from "@tauri-apps/api/tauri";
 
-const invoke = window.__TAURI__.invoke
+const invoke = window.__TAURI__.invoke;

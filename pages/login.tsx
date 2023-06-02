@@ -1,16 +1,16 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import SimpleReactValidator from 'simple-react-validator';
-import { invoke } from '@tauri-apps/api/tauri';
+import Head from "next/head";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import SimpleReactValidator from "simple-react-validator";
+import { invoke } from "@tauri-apps/api/tauri";
 
 interface LoginProps {
   validator: SimpleReactValidator;
 }
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const validator = new SimpleReactValidator();
   const [login, loginClicked] = useState(false);
   const forceUpdate = () => {
@@ -20,10 +20,10 @@ export default function Login() {
 
   useEffect(() => {
     const completeForm = async () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         if (validator.allValid()) {
           try {
-            const token: string = await invoke('command_login_user', {
+            const token: string = await invoke("command_login_user", {
               email,
               password,
             });
@@ -55,7 +55,7 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="youremail@email.com"
           />
-          {validator.message('email', email, 'required')}
+          {validator.message("email", email, "required")}
         </div>
         <div className="mb-4 text-lg">
           <input
@@ -64,7 +64,7 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="*********"
           />
-          {validator.message('password', password, 'required')}
+          {validator.message("password", password, "required")}
         </div>
         <div className="mt-8 flex justify-center text-lg text-black">
           <button onClick={(e) => loginClicked(true)}>Login</button>

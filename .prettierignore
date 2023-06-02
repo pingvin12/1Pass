@@ -1,0 +1,5 @@
+# Ignore artifacts:
+.github
+.idea
+tauri-src
+assets

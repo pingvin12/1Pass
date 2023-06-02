@@ -16,6 +16,10 @@ diesel migrations run
 ```
 
 Then start using npm:
+
 ```bash
 npm run tauri dev
 ```
+
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!

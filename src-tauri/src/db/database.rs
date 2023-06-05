@@ -15,7 +15,7 @@ use bcrypt::{verify, DEFAULT_COST};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 
 
-struct Database {
+pub struct Database {
     connection: PgConnection
 }
 
@@ -24,14 +24,16 @@ pub struct JwtToken {
     pub validtill: i32,
 }
 
+
+
 impl Database {
-    fn new() -> PgConnection {
+    pub fn new() -> PgConnection {
         dotenv().ok();
         let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
     }
 
-    fn authenticate(conn: &mut PgConnection, username: &str, pwd: &str) -> Result<JwtToken, String>
+    pub fn authenticate(conn: &mut PgConnection, username: &str, pwd: &str) -> Result<JwtToken, String>
     {
         use crate::schema::users::dsl::*;
         let mut user = users.filter(username.eq(username))
@@ -88,6 +90,11 @@ pub fn login(email: String, password: String) -> Result<JwtToken, String>
     }
 }
 
+pub fn return_secrets(token: JwtToken) -> Result<String, String>
+{
+    Ok("".into())
+}
+
 #[tauri::command]
 pub fn command_register_user(username: String, password: String, email: String) -> Result<bool, String>
 {
@@ -103,4 +110,11 @@ pub fn command_login_user(email: String, password: String) -> Result<String, Str
 {
     let res = login(email, password).unwrap();
     Ok(res.token)
+}
+
+#[tauri::command]
+pub fn command_user_secrets() -> Result<String, String>
+{
+    let res = return_secrets(JwtToken { token: "sss".into(), validtill: 32 });
+    Ok(res.unwrap())
 }

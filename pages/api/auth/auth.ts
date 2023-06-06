@@ -1,33 +1,85 @@
+import React, { createContext, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+import { authObject } from "../models/auth.object";
 
-const isClient = typeof window !== "undefined";
+const AuthContext = createContext({
+  user: null,
+});
 
-export const authenticate = async (credentials: any) => {
-  let username = credentials.username;
-  let password = credentials.password;
+export function AuthProvider({ children }) {
+  const [loginState, setLoginState] = useState({
+    loggedIn: false,
+    name: "",
+    email: "",
+    jwtToken: {
+      token: "",
+      validity: 0,
+    },
+  });
+  const loginAsync = async (email: string, password: string) => {
+    try {
+      const token: authObject = await invoke("auth", {
+        email,
+        password,
+      });
 
-  const res =
-    isClient &&
-    invoke("auth_user", {
-      username: username,
-      password: password,
-    });
+      setLoginState({
+        loggedIn: true,
+        name: token.name,
+        email: token.email,
+        jwtToken: token.jwtToken,
+      });
+    } catch (err) {
+      console.error("Login failed", err);
+    }
+  };
 
-  return res;
-};
+  const logoutAsync = async () => {
+    try {
+      if (loginState.loggedIn === true) {
+        const response: boolean = await invoke("logout", {
+          token: loginState.jwtToken.token,
+        });
 
-export const register = async (credentials: any) => {
-  let username = credentials.username;
-  let password = credentials.password;
-  let email = credentials.email;
+        return response;
+      }
+    } catch (err) {
+      console.error("logout error", err);
+    }
+  };
 
-  const res =
-    isClient &&
-    invoke("register_user", {
-      email: email,
-      username: username,
-      password: password,
-    });
+  const registerAsync = async (
+    email: string,
+    username: string,
+    password: string
+  ) => {
+    try {
+      const response: boolean = await invoke("register", {
+        email,
+        username,
+        password,
+      });
 
-  return res;
-};
+      return response;
+    } catch (err) {
+      console.error("logout error", err);
+    }
+  };
+
+  const checkUserLoggedIn = async () => {
+    try {
+      const response: boolean = await invoke("check_auth", {
+        token: loginState.jwtToken.token,
+      });
+
+      return response;
+    } catch (err) {
+      console.error("check auth error", err);
+    }
+  };
+
+  useEffect(() => {
+    // Check for user authentication status on initial load
+    checkUserLoggedIn();
+  }, []);
+}

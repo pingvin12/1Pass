@@ -1,28 +1,35 @@
-use crate::db::database;
+use std::error::Error;
+
+use crate::db::database::Database;
 
 use super::domain::auth::JwtToken::JwtToken;
 
-
 #[tauri::command]
-pub fn register(username: String, password: String, email: String) -> Result<bool, String>
-{
-    let res = database::register(username, password, email); // map err to string
+pub fn register(username: String, password: String, email: String) -> Result<(), ()> {
+    let mut connection = Database::new();
+    let res = Database::register(&mut connection, &username, &password, &email); // map err to string
     match res {
         Ok(result) => Ok(result),
-        Err(_err) => Err(_err),
+        Err(_err) => todo!("error handling"),
     }
 }
 
 #[tauri::command]
-pub fn auth(email: String, password: String) -> Result<String, String>
-{
-    let res = database::login(email, password).unwrap();
-    Ok(res.token)
+pub fn auth(username: String, password: String) -> Result<String, ()> {
+    let mut connection = Database::new();
+    let res = Database::authenticate(&mut connection, &username, &password);
+    match res {
+        Ok(result) => Ok(result.token),
+        Err(_err) => todo!("error handling"),
+    }
 }
 
+/* !todo()
 #[tauri::command]
-pub fn secrets() -> Result<String, String>
+pub fn secrets(JwtToken: JwtToken) -> Result<(), Box<dyn Error>>
 {
-    let res = database::return_secrets(JwtToken { token: "sss".into() });
-    Ok(res.unwrap())
+    let mut connection = Database::new();
+    let res = Database::secrets()
+    Ok(())
 }
+*/

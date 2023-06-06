@@ -1,4 +1,3 @@
-
 pub mod domain {
     pub mod auth {
         pub mod JwtToken;
@@ -8,5 +7,6 @@ pub mod domain {
         pub mod SecretObject;
     }
 }
-pub mod database;
 pub mod commands;
+pub mod database;
+pub mod encryption;

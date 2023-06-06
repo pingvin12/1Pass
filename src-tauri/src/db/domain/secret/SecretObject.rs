@@ -1,7 +1,7 @@
 use std::time::SystemTime;
 
-use serde::{Serialize};
-use crate::schema::{secrets};
+use crate::schema::secrets;
+use serde::Serialize;
 
 #[derive(Queryable, Serialize, Ord, Eq, PartialEq, PartialOrd)]
 pub struct Secret {

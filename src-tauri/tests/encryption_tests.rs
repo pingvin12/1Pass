@@ -3,14 +3,14 @@ pub mod encryption_tests {
 
     #[test]
     pub fn encrypt_data_success() {
-       let data = encryption::encrypt_data("data".to_string());
-       assert_eq!(data.to_string(), "2Tr/he/Nmf5Ix4woroGM+g==".to_string());
+        let data = encryption::encrypt_data("data".to_string());
+        assert_eq!(data.to_string(), "2Tr/he/Nmf5Ix4woroGM+g==".to_string());
     }
 
     #[test]
     pub fn encrypt_data_fail() {
         let data = encryption::encrypt_data("data".to_string());
-        assert_ne!(data.to_string(), "wrong".to_string());     
+        assert_ne!(data.to_string(), "wrong".to_string());
     }
 
     #[test]

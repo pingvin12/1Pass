@@ -74,7 +74,10 @@ pub fn set_entry(name: String, data: String, service: String) -> String {
 pub fn get_entry(name: String, service: String) -> String {
     let entry = keyring::Entry::new(&service, &name);
 
-    let item = entry.unwrap().get_password().unwrap_or_else(|error| "error".into());
+    let item = entry
+        .unwrap()
+        .get_password()
+        .unwrap_or_else(|error| "error".into());
 
     item.into()
 }

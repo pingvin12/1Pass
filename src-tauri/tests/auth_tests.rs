@@ -1,9 +1,9 @@
 pub mod auth_tests {
-    use app::db::database;
-
+    use app::db::commands;
+    
     #[test]
     pub fn register_success() {
-        let res = database::register("tdest@test.com".to_string(), "test".to_string(),"test@test.com".to_string());
+        let res = commands::register("tdest@test.com".to_string(), "test".to_string(),"test@test.com".to_string());
         assert_eq!(true, res.unwrap());
     }
 

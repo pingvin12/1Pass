@@ -3,14 +3,14 @@
   windows_subsystem = "windows"
 )]
 
-use app::db::database;
 
+use app::db::commands;
 
 fn main() {
   tauri::Builder::default()
       .invoke_handler(tauri::generate_handler![
-            database::command_login_user,
-            database::command_register_user,
+            commands::auth,
+            commands::register
       ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

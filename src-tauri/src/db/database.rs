@@ -5,9 +5,7 @@ use std::env;
 use diesel::associations::HasTable;
 use diesel::insert_into;
 use diesel::prelude::*;
-use crate::db::models;
-use super::{encryption::{self, encrypt_password, verify_password}};
-use super::models::*;
+use crate::db::domain::auth::{JwtToken::JwtToken, UserObject::User, UserObject::NewUser};
 use crate::schema::*;
 use crate::schema::users::dsl::users;
 use chrono::prelude::*;
@@ -18,12 +16,6 @@ use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 pub struct Database {
     connection: PgConnection
 }
-
-pub struct JwtToken {
-    pub token: String,
-    pub validtill: i32,
-}
-
 
 
 impl Database {
@@ -50,7 +42,7 @@ impl Database {
                 &EncodingKey::from_secret("your-secret-key".as_ref()),
             )
             .map_err(|_| "Error generating JWT token")?;
-            Ok(JwtToken { token: token, validtill: 86400 })
+            Ok(JwtToken { token: token })
         } else {
             Err("Bad username or password".to_owned())
         }
@@ -60,7 +52,7 @@ impl Database {
     {
         use crate::schema::users::dsl::*;
         let hashpass = hash(&ins_password, DEFAULT_COST).unwrap();
-        let new_user = vec![ models::NewUser { username: &ins_username, email: &ins_email, password: &ins_password } ];
+        let new_user = vec![ NewUser { username: &ins_username, email: &ins_email, password: &ins_password } ];
         
         let reg: usize = insert_into(users)
         .values(&new_user)
@@ -84,6 +76,7 @@ pub fn login(email: String, password: String) -> Result<JwtToken, String>
 {
     let mut connect = Database::new();
     let res = Database::authenticate(&mut connect, &email, &password);
+
     match res {
         Ok(token) => Ok(token),
         Err(_err) => Err(_err),
@@ -93,28 +86,4 @@ pub fn login(email: String, password: String) -> Result<JwtToken, String>
 pub fn return_secrets(token: JwtToken) -> Result<String, String>
 {
     Ok("".into())
-}
-
-#[tauri::command]
-pub fn command_register_user(username: String, password: String, email: String) -> Result<bool, String>
-{
-    let res = register(username, password, email); // map err to string
-    match res {
-        Ok(result) => Ok(result),
-        Err(_err) => Err(_err),
-    }
-}
-
-#[tauri::command]
-pub fn command_login_user(email: String, password: String) -> Result<String, String>
-{
-    let res = login(email, password).unwrap();
-    Ok(res.token)
-}
-
-#[tauri::command]
-pub fn command_user_secrets() -> Result<String, String>
-{
-    let res = return_secrets(JwtToken { token: "sss".into(), validtill: 32 });
-    Ok(res.unwrap())
 }

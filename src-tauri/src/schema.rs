@@ -1,6 +1,16 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    news (id) {
+        id -> Int4,
+        title -> Varchar,
+        body -> Text,
+        published -> Bool,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
     secrets (id) {
         id -> Int4,
         uid -> Nullable<Int4>,
@@ -20,4 +30,8 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(secrets, users,);
+diesel::allow_tables_to_appear_in_same_query!(
+    news,
+    secrets,
+    users,
+);

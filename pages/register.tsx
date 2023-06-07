@@ -7,8 +7,6 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { useState } from "react";
 // When using the Tauri global script (if not using the npm package)
 // Be sure to set `build.withGlobalTauri` in `tauri.conf.json` to true
-const invoker = window.__TAURI__.invoke;
-
 export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +16,7 @@ export default function Register() {
   function completeForm() {
     console.log(validator.allValid());
     if (validator.allValid()) {
-      invoker("command_register_user", {
+      invoke("command_register_user", {
         username: username,
         password: password,
         email: email,

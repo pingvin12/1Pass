@@ -3,11 +3,12 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:3000",
+    "withGlobalTauri": true,
+    "devPath": "http://localhost:4200",
     "distDir": "../out"
   },
   "package": {
-    "productName": "rodeo",
+    "productName": "onepass",
     "version": "0.1.0"
   },
   "tauri": {
@@ -29,7 +30,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.onepass.dev",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -58,7 +59,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Rodeo",
+        "title": "1Pass",
         "width": 800
       }
     ]

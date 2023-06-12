@@ -1,8 +1,6 @@
-use std::error::Error;
-
 use crate::db::database::Database;
 
-use super::domain::auth::JwtToken::JwtToken;
+use super::encryption::{generate_encryption_key, self};
 
 #[tauri::command]
 pub fn register(username: String, password: String, email: String) -> Result<(), ()> {
@@ -22,6 +20,22 @@ pub fn auth(username: String, password: String) -> Result<String, ()> {
         Ok(result) => Ok(result.token),
         Err(_err) => todo!("error handling"),
     }
+}
+
+#[tauri::command]
+pub fn me(token: String) -> Result<String, String> {
+    let mut connection = Database::new();
+    let res = Database::me(&mut connection, &token);
+    match res {
+        Ok(res) => Ok(res),
+        Err(err) => todo!()
+    }
+}
+
+#[tauri::command]
+pub fn init_hosting() {
+    let generated = generate_encryption_key(32);
+    encryption::set_encryption_key(generated);
 }
 
 /* !todo()

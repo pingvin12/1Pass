@@ -7,7 +7,7 @@ use dotenv::dotenv;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header, Validation, DecodingKey};
 use std::{env, string};
 use std::error::Error;
-
+use chrono::{Utc, Duration};
 use super::domain::auth::UserObject::UserQuery;
 
 pub struct Database {
@@ -37,14 +37,14 @@ impl Database {
             let identified_user = IdentifiedUser {
                 username: user.username,
                 email: user.email,
-                exp: 86400,
+                exp: (Utc::now() + Duration::seconds(86400)).timestamp().try_into().unwrap(),
             };
 
             let header = Header::new(Algorithm::HS512);
             let token = encode(
                 &header,
                 &identified_user,
-                &EncodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()),
+                &EncodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()), //placeholder
             )
             .map_err(|_| "Error generating JWT token")?;
             Ok(JwtToken { token })
@@ -76,9 +76,8 @@ impl Database {
     }
 
     pub fn me(&mut self, token: &str) -> Result<String, jsonwebtoken::errors::Error> {
-        let validation = Validation::new(jsonwebtoken::Algorithm::HS512);
-        let decoding_key = DecodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref());
-        let token_object = jsonwebtoken::decode::<IdentifiedUser>(&token, &decoding_key, &validation).expect("Error while decoding token");
+        let token_object = jsonwebtoken::decode::<IdentifiedUser>(&token, &DecodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()), &Validation::new(Algorithm::HS512))
+        .expect("Error while decoding webtoken."); //placeholder
         Ok(serde_json::to_string(&token_object.claims).unwrap())
     }
 }

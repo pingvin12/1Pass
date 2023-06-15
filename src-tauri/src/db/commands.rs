@@ -3,7 +3,7 @@ use crate::db::database::Database;
 use super::encryption::{generate_encryption_key, self};
 
 #[tauri::command]
-pub fn register(username: String, password: String, email: String) -> Result<(), ()> {
+pub fn register(username: String, password: String, email: String) -> Result<String, ()> {
     let mut connection = Database::new();
     let res = Database::register(&mut connection, &username, &password, &email); // map err to string
     match res {
@@ -13,9 +13,9 @@ pub fn register(username: String, password: String, email: String) -> Result<(),
 }
 
 #[tauri::command]
-pub fn auth(username: String, password: String) -> Result<String, ()> {
+pub fn auth(email: String, password: String) -> Result<String, ()> {
     let mut connection = Database::new();
-    let res = Database::authenticate(&mut connection, &username, &password);
+    let res = Database::authenticate(&mut connection, &email, &password);
     match res {
         Ok(result) => Ok(result.token),
         Err(_err) => todo!("error handling"),
@@ -30,6 +30,11 @@ pub fn me(token: String) -> Result<String, String> {
         Ok(res) => Ok(res),
         Err(err) => todo!()
     }
+}
+
+#[tauri::command]
+pub fn logout() {
+
 }
 
 #[tauri::command]

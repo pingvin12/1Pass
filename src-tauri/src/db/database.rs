@@ -23,12 +23,12 @@ impl Database {
     }
 
     pub fn authenticate(&mut self,
-        auth_username: &str,
+        auth_email: &str,
         auth_password: &str,
     ) -> Result<JwtToken, Box<dyn Error>> {
         use crate::schema::users::dsl::*;
         let user = users
-            .filter(username.eq(auth_username))
+            .filter(email.eq(auth_email))
             .first::<User>(&self.connection)
             .expect("Error while logging in");
 
@@ -58,7 +58,7 @@ impl Database {
         inserted_username: &str,
         inserted_password: &str,
         inserted_email: &str,
-    ) -> Result<(), Box<dyn Error>> {
+    ) -> Result<String, Box<dyn Error>> {
         use crate::schema::users::dsl::*;
         let hashed_password = hash(&inserted_password, DEFAULT_COST).unwrap();
         
@@ -72,7 +72,7 @@ impl Database {
             .values(&new_user)
             .execute(&self.connection)
             .map_err(|_| "Error while registering user")?;
-        Ok(())
+        Ok(reg.to_string())
     }
 
     pub fn me(&mut self, token: &str) -> Result<String, jsonwebtoken::errors::Error> {

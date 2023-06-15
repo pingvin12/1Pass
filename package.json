@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4200",
-    "build": "next build",
-    "start": "next start -p 4200",
+    "next-start": "cross-env BROWSER=none next dev",
+    "next-build": "next build && next export",
+    "tauri": "tauri",
+    "build": "tauri build",
+    "dev": "tauri dev",
     "lint": "next lint",
-    "tauri": "tauri"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@agney/react-loading": "^0.1.2",

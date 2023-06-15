@@ -23,7 +23,8 @@
     "react-dom": "18.2.0",
     "react-moving-text": "^0.0.7",
     "react-spinners": "^0.13.8",
-    "simple-react-validator": "^1.6.2"
+    "simple-react-validator": "^1.6.2",
+    "swr": "^2.1.5"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.2.1",

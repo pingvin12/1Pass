@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 
 interface NewsItem {
-  title: string,
-  content: string
+  title: string;
+  content: string;
 }
 
 export default function NewsComponent() {
@@ -76,5 +76,4 @@ export default function NewsComponent() {
       </div>
     </div>
   );
-  
 }

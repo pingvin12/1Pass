@@ -1,10 +1,9 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run dev",
-    "withGlobalTauri": true,
-    "devPath": "http://localhost:4200",
+    "beforeBuildCommand": "npm run next-build",
+    "beforeDevCommand": "npm run next-start",
+    "devPath": "http://localhost:3000",
     "distDir": "../out"
   },
   "package": {
@@ -13,7 +12,7 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": true
     },
     "bundle": {
       "active": true,
@@ -57,10 +56,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
         "resizable": true,
         "title": "1Pass",
-        "width": 800
+        "width": 1280,
+        "height": 800
       }
     ]
   }

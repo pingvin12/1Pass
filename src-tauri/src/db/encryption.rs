@@ -2,14 +2,16 @@ use argon2::{
     password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
 };
+use base64::{Engine, engine};
 use magic_crypt::{new_magic_crypt, MagicCryptTrait};
 use once_cell::sync::Lazy;
+
 use std::sync::Mutex;
+use getrandom::getrandom;
 extern crate keyring;
 
 static ENCRYPTION_KEY: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new("".to_owned()));
 
-#[tauri::command]
 pub fn encrypt_password(password: String) -> String {
     let salt = SaltString::generate(&mut OsRng);
 
@@ -25,7 +27,6 @@ pub fn encrypt_password(password: String) -> String {
     password_hash.into()
 }
 
-#[tauri::command]
 pub fn verify_password(password: String, hash: String) -> bool {
     let parsed_hash = PasswordHash::new(&hash).unwrap();
 
@@ -36,7 +37,6 @@ pub fn verify_password(password: String, hash: String) -> bool {
     result.into()
 }
 
-#[tauri::command]
 pub fn encrypt_data(data: String) -> String {
     let key = ENCRYPTION_KEY.lock().unwrap().to_string();
     let mc = new_magic_crypt!(key, 256);
@@ -46,7 +46,6 @@ pub fn encrypt_data(data: String) -> String {
     encrypted_string.into()
 }
 
-#[tauri::command]
 pub fn decrypt_data(data: String) -> String {
     let key = ENCRYPTION_KEY.lock().unwrap().to_string();
     let mc = new_magic_crypt!(key, 256);
@@ -58,7 +57,6 @@ pub fn decrypt_data(data: String) -> String {
     decrypted_string.into()
 }
 
-#[tauri::command]
 pub fn set_entry(name: String, data: String, service: String) -> String {
     let entry = keyring::Entry::new(&service, &name);
 
@@ -70,31 +68,33 @@ pub fn set_entry(name: String, data: String, service: String) -> String {
     }
 }
 
-#[tauri::command]
 pub fn get_entry(name: String, service: String) -> String {
     let entry = keyring::Entry::new(&service, &name);
 
     let item = entry
         .unwrap()
         .get_password()
-        .unwrap_or_else(|error| "error".into());
+        .unwrap_or_else(|_error| "error".into());
 
     item.into()
 }
 
-#[tauri::command]
 pub fn delete_entry(name: String, service: String) {
     let entry = keyring::Entry::new(&service, &name);
 
-    let item = entry.unwrap().delete_password();
+    let _item = entry.unwrap().delete_password();
 }
 
-#[tauri::command]
 pub fn receive_encryption_key(key: String) {
     *ENCRYPTION_KEY.lock().unwrap() = key
 }
 
-#[tauri::command]
 pub fn set_encryption_key(service: String) {
     *ENCRYPTION_KEY.lock().unwrap() = get_entry("encryptionKey".to_string(), service)
+}
+
+pub fn generate_encryption_key(length: usize) -> String {
+    let mut key = vec![0u8; length];
+    getrandom(&mut key).expect("Failed to generate encryption key");
+    engine::general_purpose::STANDARD.encode(key)
 }

@@ -1,76 +1,83 @@
-use crate::db::domain::auth::{JwtToken::JwtToken, UserObject::NewUser, UserObject::User};
-use crate::schema::users::dsl::users;
-use crate::schema::*;
+use crate::db::domain::auth::{jwt_token::JwtToken, user_object::*};
 use bcrypt::hash;
 use bcrypt::{verify, DEFAULT_COST};
-use chrono::prelude::*;
-use diesel::associations::HasTable;
 use diesel::insert_into;
 use diesel::prelude::*;
-use diesel::select;
 use dotenv::dotenv;
-use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
-use std::env;
+use jsonwebtoken::{encode, Algorithm, EncodingKey, Header, Validation, DecodingKey};
+use std::{env};
 use std::error::Error;
+use chrono::{Utc, Duration};
+
 
 pub struct Database {
     connection: PgConnection,
 }
 
 impl Database {
-    pub fn new() -> PgConnection {
+    pub fn new() -> Self {
         dotenv().ok();
         let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-        PgConnection::establish(&database_url)
-            .expect(&format!("Error connecting to {}", database_url))
+        Database { connection: PgConnection::establish(&database_url)
+            .expect(&format!("Error connecting to {}", database_url)) }
     }
 
-    pub fn authenticate(
-        conn: &mut PgConnection,
-        username: &str,
-        pwd: &str,
+    pub fn authenticate(&mut self,
+        auth_email: &str,
+        auth_password: &str,
     ) -> Result<JwtToken, Box<dyn Error>> {
         use crate::schema::users::dsl::*;
-        let mut user = users
-            .filter(username.eq(username))
-            .first::<User>(conn)
+        let user = users
+            .filter(email.eq(auth_email))
+            .first::<User>(&self.connection)
             .expect("Error while logging in");
 
-        //verify(pwd, &user.password);
-        //.map_err(|_| "Invalid u(sername or password".to_owned())?;
-        if user.password.eq(pwd) {
+
+        if verify(auth_password, &user.password).unwrap() {
+            let identified_user = IdentifiedUser {
+                username: user.username,
+                email: user.email,
+                exp: (Utc::now() + Duration::seconds(86400)).timestamp().try_into().unwrap(),
+            };
+
+            let header = Header::new(Algorithm::HS512);
             let token = encode(
-                &Header::default(),
-                &user,
-                &EncodingKey::from_secret("your-secret-key".as_ref()),
+                &header,
+                &identified_user,
+                &EncodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()), //placeholder
             )
             .map_err(|_| "Error generating JWT token")?;
             Ok(JwtToken { token })
         } else {
-            Ok(JwtToken {
-                token: "".to_owned(),
-            })
+            Ok(JwtToken { token: (&"todo!()").to_string() })
         }
     }
 
     pub fn register(
-        conn: &PgConnection,
-        ins_username: &str,
-        ins_password: &str,
-        ins_email: &str,
-    ) -> Result<(), Box<dyn Error>> {
+        &mut self,
+        inserted_username: &str,
+        inserted_password: &str,
+        inserted_email: &str,
+    ) -> Result<String, Box<dyn Error>> {
         use crate::schema::users::dsl::*;
-        let hashpass = hash(&ins_password, DEFAULT_COST).unwrap();
+        let hashed_password = hash(&inserted_password, DEFAULT_COST).unwrap();
+        
         let new_user = vec![NewUser {
-            username: &ins_username,
-            email: &ins_email,
-            password: &ins_password,
+            username: &inserted_username,
+            email: &inserted_email,
+            password: &hashed_password,
         }];
 
         let reg: usize = insert_into(users)
             .values(&new_user)
-            .execute(conn)
+            .execute(&self.connection)
             .map_err(|_| "Error while registering user")?;
-        Ok(())
+        Ok(reg.to_string())
+    }
+
+    pub fn me(&mut self, token: &str) -> Result<String, jsonwebtoken::errors::Error> {
+        let token_object = jsonwebtoken::decode::<IdentifiedUser>(&token, &DecodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()), &Validation::new(Algorithm::HS512))
+        .expect("Error while decoding webtoken."); //placeholder
+        Ok(serde_json::to_string(&token_object.claims).unwrap())
     }
 }

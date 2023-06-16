@@ -1,85 +1,55 @@
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+import useSWR, { mutate } from "swr";
 import { authObject } from "../models/auth.object";
+import { invokeFetcher } from "../invoke/useInvoke";
 
-const AuthContext = createContext({
-  user: null,
-});
+export const loginAsync = async (
+  email: string,
+  password: string
+): Promise<string | undefined> => {
+  try {
+    const key = ["auth", { email, password }];
+    const data = await invokeFetcher(key);
+    localStorage.setItem("token", `${data}`);
+    return data as string;
+  } catch (err) {
+    console.error("Login failed", err);
+    return undefined;
+  }
+};
 
-export function AuthProvider({ children }) {
-  const [loginState, setLoginState] = useState({
-    loggedIn: false,
-    name: "",
-    email: "",
-    jwtToken: {
-      token: "",
-      validity: 0,
-    },
-  });
-  const loginAsync = async (email: string, password: string) => {
-    try {
-      const token: authObject = await invoke("auth", {
-        email,
-        password,
-      });
+export const me = async (token: string): Promise<string | undefined> => {
+  try {
+    const data: unknown = await invokeFetcher(["me", { token }]);
+    return data as string;
+  } catch (err) {
+    console.error("Get user failed", err);
+    return undefined;
+  }
+};
 
-      setLoginState({
-        loggedIn: true,
-        name: token.name,
-        email: token.email,
-        jwtToken: token.jwtToken,
-      });
-    } catch (err) {
-      console.error("Login failed", err);
-    }
-  };
+export const logoutAsync = async (user: authObject) => {
+  try {
+    // const { data } = useSWR(['logout', { user }], invokeFetcher);
+    // console.log(data);
+  } catch (err) {
+    console.error("logout error", err);
+  }
+};
 
-  const logoutAsync = async () => {
-    try {
-      if (loginState.loggedIn === true) {
-        const response: boolean = await invoke("logout", {
-          token: loginState.jwtToken.token,
-        });
-
-        return response;
-      }
-    } catch (err) {
-      console.error("logout error", err);
-    }
-  };
-
-  const registerAsync = async (
-    email: string,
-    username: string,
-    password: string
-  ) => {
-    try {
-      const response: boolean = await invoke("register", {
-        email,
-        username,
-        password,
-      });
-
-      return response;
-    } catch (err) {
-      console.error("logout error", err);
-    }
-  };
-
-  const checkUserLoggedIn = async () => {
-    try {
-      const response: boolean = await invoke("check_auth", {
-        token: loginState.jwtToken.token,
-      });
-
-      return response;
-    } catch (err) {
-      console.error("check auth error", err);
-    }
-  };
-
-  useEffect(() => {
-    // Check for user authentication status on initial load
-    checkUserLoggedIn();
-  }, []);
-}
+export const registerAsync = async (
+  email: string,
+  username: string,
+  password: string
+) => {
+  try {
+    const key = ["register", { email, username, password }];
+    const data = await invokeFetcher(key);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Register failed", error);
+    throw error;
+  }
+};

@@ -6,19 +6,106 @@ body {
   background-color: #fffafa;
 }
 
-input {
-  color: black;
-  background-color: #f8f8f8;
-  border: 1px solid #a0a0a0;
-  border-radius: 4px;
-  padding: 0.5rem;
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
+.register-container-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-input:focus {
-  border-color: #666666;
-  box-shadow: 0 0 0 4px rgba(2, 125, 255, 0.5);
+.register-container {
+  background-color: #ffffff;
+  padding: 50px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.register-header-container {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.register-header {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.register-input-container,
+.register-username-container,
+.register-password-container {
+  margin-bottom: 16px;
+}
+
+.register-input-container input,
+.register-username-container input,
+.register-password-container input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #cccccc;
+}
+
+.register-button-container {
+  text-align: center;
+}
+
+.register-button-container button {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.login-container-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  background-color: #ffffff;
+  padding: 50px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-span-header-container {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.login-span-header {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.login-email-error-container,
+.login-password-error-container {
+  margin-bottom: 16px;
+}
+
+.login-email-error-container input,
+.login-password-error-container input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #cccccc;
+}
+
+.login-btn-container {
+  text-align: center;
+}
+
+.login-btn-container button {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
 }
 
 nav {

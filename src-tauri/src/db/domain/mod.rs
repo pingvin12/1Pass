@@ -1,9 +1,9 @@
 pub mod domain {
     pub mod auth {
-        pub mod JwtToken;
-        pub mod UserObject;
+        pub mod jwt_token;
+        pub mod user_object;
     }
     pub mod secret {
-        pub mod Secret;
+        pub mod secret_object;
     }
 }

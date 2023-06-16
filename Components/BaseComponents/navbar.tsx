@@ -90,7 +90,7 @@ function Navbar() {
             userData.name !== "" ? 
             <>
             <li>
-            <a onClick={() => handleLinkClick("/profile")}>{userData.name}'s Profile</a>
+            <a onClick={() => handleLinkClick("/profile")}>{userData.name}&apos;s Profile</a>
           </li>
           <li>
             <a onClick={() => logout(userData.jwtToken.token)}>Logout</a>

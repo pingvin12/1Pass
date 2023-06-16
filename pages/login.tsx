@@ -1,17 +1,7 @@
-import Head from "next/head";
-import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import SimpleReactValidator from "simple-react-validator";
-import { invoke } from "@tauri-apps/api/tauri";
-import { authObject } from "./api/models/auth.object";
-import dynamic from "next/dynamic";
 import { loginAsync } from "./api/auth/auth";
 import router from "next/router";
-import { useSWRConfig } from "swr";
-
-interface LoginProps {
-  validator: SimpleReactValidator;
-}
 
 export default function Login() {
   const [email, setEmail] = useState("");

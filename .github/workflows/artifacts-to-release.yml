@@ -77,7 +77,7 @@ jobs:
             github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: process.env.release_id,
+              release_id: parseInt(process.env.release_id),
               draft: false,
               prerelease: false
             })

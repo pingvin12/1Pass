@@ -1,14 +1,14 @@
-use crate::db::domain::auth::{JwtToken::JwtToken, UserObject::*};
+use crate::db::domain::auth::{jwt_token::JwtToken, user_object::*};
 use bcrypt::hash;
 use bcrypt::{verify, DEFAULT_COST};
 use diesel::insert_into;
 use diesel::prelude::*;
 use dotenv::dotenv;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header, Validation, DecodingKey};
-use std::{env, string};
+use std::{env};
 use std::error::Error;
 use chrono::{Utc, Duration};
-use super::domain::auth::UserObject::UserQuery;
+
 
 pub struct Database {
     connection: PgConnection,

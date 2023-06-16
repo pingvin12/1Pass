@@ -5,7 +5,7 @@ use argon2::{
 use base64::{Engine, engine};
 use magic_crypt::{new_magic_crypt, MagicCryptTrait};
 use once_cell::sync::Lazy;
-use tauri::utils::Error;
+
 use std::sync::Mutex;
 use getrandom::getrandom;
 extern crate keyring;
@@ -74,7 +74,7 @@ pub fn get_entry(name: String, service: String) -> String {
     let item = entry
         .unwrap()
         .get_password()
-        .unwrap_or_else(|error| "error".into());
+        .unwrap_or_else(|_error| "error".into());
 
     item.into()
 }
@@ -82,7 +82,7 @@ pub fn get_entry(name: String, service: String) -> String {
 pub fn delete_entry(name: String, service: String) {
     let entry = keyring::Entry::new(&service, &name);
 
-    let item = entry.unwrap().delete_password();
+    let _item = entry.unwrap().delete_password();
 }
 
 pub fn receive_encryption_key(key: String) {

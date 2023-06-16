@@ -1,1 +1,1 @@
-pub mod SecretObject;
+pub mod secret_object;

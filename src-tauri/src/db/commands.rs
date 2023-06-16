@@ -28,7 +28,7 @@ pub fn me(token: String) -> Result<String, String> {
     let res = Database::me(&mut connection, &token);
     match res {
         Ok(res) => Ok(res),
-        Err(err) => todo!()
+        Err(_err) => todo!()
     }
 }
 

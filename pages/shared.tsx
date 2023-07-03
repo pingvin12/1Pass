@@ -30,7 +30,7 @@ export default function Register() {
         {
           secrets ?
           secrets.map((secret: secretObject) => {
-            return <Card title={secret.title} description={secret.content} id={secret.id} onRemove={fetchSecrets} />
+            return <Card key={secret.id} title={secret.title} description={secret.content} id={secret.id} onRemove={fetchSecrets} />
           }) : ""
         }
       </CardLayout>

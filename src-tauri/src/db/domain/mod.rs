@@ -6,4 +6,7 @@ pub mod domain {
     pub mod secret {
         pub mod secret_object;
     }
+    pub mod news {
+        pub mod news_object;
+    }
 }

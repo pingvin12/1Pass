@@ -1,17 +1,19 @@
 use crate::db::domain::auth::{jwt_token::JwtToken, user_object::*};
+use crate::db::domain::news;
 use bcrypt::hash;
 use bcrypt::{verify, DEFAULT_COST};
 use diesel::insert_into;
 use diesel::prelude::*;
 use dotenv::dotenv;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header, Validation, DecodingKey};
+use log::error;
 use std::{env};
 use std::error::Error;
 use chrono::{Utc, Duration};
 
 
 pub struct Database {
-    connection: PgConnection,
+    pub connection: PgConnection,
 }
 
 impl Database {
@@ -25,18 +27,25 @@ impl Database {
     pub fn authenticate(&mut self,
         auth_email: &str,
         auth_password: &str,
-    ) -> Result<JwtToken, Box<dyn Error>> {
+    ) -> Result<JwtToken, String> {
         use crate::schema::users::dsl::*;
-        let user = users
+        let user: User = match users
             .filter(email.eq(auth_email))
             .first::<User>(&self.connection)
-            .expect("Error while logging in");
+            {
+                Ok(res) => res,
+                Err(_err) => {
+                    error!("Error while authenticating user");
+                    return Err("Error while authenticating user".to_owned());
+                },
+            };
 
 
         if verify(auth_password, &user.password).unwrap() {
             let identified_user = IdentifiedUser {
                 username: user.username,
                 email: user.email,
+                userid: user.id,
                 exp: (Utc::now() + Duration::seconds(86400)).timestamp().try_into().unwrap(),
             };
 
@@ -76,8 +85,22 @@ impl Database {
     }
 
     pub fn me(&mut self, token: &str) -> Result<String, jsonwebtoken::errors::Error> {
-        let token_object = jsonwebtoken::decode::<IdentifiedUser>(&token, &DecodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()), &Validation::new(Algorithm::HS512))
-        .expect("Error while decoding webtoken."); //placeholder
+        let token_object = match jsonwebtoken::decode::<IdentifiedUser>(&token, &DecodingKey::from_secret("8Zz5tw0Ionm3XPZZfN0NOml3z9FMfmpgXwovR9fp6ryDIoGRM8EPHAB6iHsc0fb".as_ref()), &Validation::new(Algorithm::HS512))
+        {
+            Ok(token) => token,
+            Err(_) => {
+                error!("Error while decoding token");
+                return Ok("".to_string());
+            }
+        };
+        
         Ok(serde_json::to_string(&token_object.claims).unwrap())
+    }
+
+    pub fn clean_server(&mut self) {
+        use crate::schema::{users::dsl::*, news::dsl::*, secrets::dsl::*};
+        diesel::delete(users).execute(&self.connection).unwrap();
+        diesel::delete(news).execute(&self.connection).unwrap();
+        diesel::delete(secrets).execute(&self.connection).unwrap();
     }
 }

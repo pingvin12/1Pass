@@ -35,5 +35,6 @@ pub struct UserQuery {
 pub struct IdentifiedUser {
     pub username: String,
     pub email: String,
+    pub userid: i32,
     pub exp: usize
 }

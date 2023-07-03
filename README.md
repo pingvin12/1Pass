@@ -23,3 +23,4 @@ Then start using npm:
 ```bash
 npm run tauri dev
 ```
+![image](https://github.com/pingvin12/1Pass/assets/1901727/db21a754-5b14-4299-be38-1fc43c89f8ee)

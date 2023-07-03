@@ -29,10 +29,9 @@ export const me = async (token: string): Promise<string | undefined> => {
   }
 };
 
-export const logoutAsync = async (user: authObject) => {
+export const logoutAsync = async () => {
   try {
-    // const { data } = useSWR(['logout', { user }], invokeFetcher);
-    // console.log(data);
+    localStorage.removeItem("token");
   } catch (err) {
     console.error("logout error", err);
   }

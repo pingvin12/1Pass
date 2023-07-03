@@ -2,10 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "../../assets/img/1pass.png";
-import { loginAsync, logoutAsync, me } from "../../pages/api/auth/auth";
-import useSWR, { useSWRConfig } from "swr";
-import { authObject } from "../../pages/api/models/auth.object";
-import { invokeFetcher } from "../../pages/api/invoke/useInvoke";
+import { logoutAsync, me } from "../../pages/api/auth/auth";
 
 function Navbar() {
   const [isExpanded, setExpanded] = useState(false);
@@ -25,29 +22,43 @@ function Navbar() {
     router.push(path);
   };
 
-  const logout = async (token: string) => {
-
+  const logout = async () => {
+    if (typeof window !== "undefined") {
+      await logoutAsync();
+      setUserData({
+        name: "",
+        email: "",
+        jwtToken: {
+          token: "",
+          validity: 0,
+        },
+      });
+      
+      router.push("/");
+      }
   }
+  
 
   useEffect(() => {
     const fetchData = async () => {
-      if (typeof window !== "undefined") {
-        const authtoken: string | null = localStorage.getItem("token");
-        console.log(authtoken);
-        const user = JSON.parse(await me(authtoken as string) ?? "");
-        if (user !== undefined && authtoken) {
-          console.log(user);
+
+      const token: string | null = localStorage.getItem("token");
+      if (typeof window !== "undefined" && token !== null) {
+        const user_object = await me(token as string);
+        if (user_object !== undefined) {
+          const user = JSON.parse(user_object);
+          if (user !== undefined && token) {
           setUserData({
             name: user.username,
             email: user.email,
             jwtToken: {
-              token: authtoken,
+              token: token,
               validity: user.exp,
             }
           })
         }
-        
       }
+    }
     };
 
     const checkLoggedIn = () => {
@@ -93,7 +104,7 @@ function Navbar() {
             <a onClick={() => handleLinkClick("/profile")}>{userData.name}&apos;s Profile</a>
           </li>
           <li>
-            <a onClick={() => logout(userData.jwtToken.token)}>Logout</a>
+            <a onClick={() => logout()}>Logout</a>
           </li>
             </>
             :

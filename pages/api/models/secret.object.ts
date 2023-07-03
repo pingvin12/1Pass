@@ -1,4 +1,5 @@
 export interface secretObject {
-  name: string;
-  secret: string;
+  id: number;
+  title: string;
+  content: string;
 }

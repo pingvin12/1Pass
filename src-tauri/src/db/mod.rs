@@ -6,15 +6,17 @@ pub mod domain {
     pub mod secret {
         pub mod secret_object;
     }
+    pub mod news {
+        pub mod news_object;
+    }
 }
 
 pub mod handlers {
     pub mod news {
-        pub mod getnews;
+        pub mod news_handler;
     }
     pub mod secret {
-        pub mod getsecret;
-        pub mod createsecret;
+        pub mod secret_handler;
     }
 }
 

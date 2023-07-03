@@ -263,3 +263,219 @@ ul {
     background-position: 0% 50%;
   }
 }
+
+/* Default card styles for larger screens */
+.card {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  width: 300px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-content {
+  text-align: center;
+}
+
+.card-title {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 767px) {
+  .card {
+    width: 100%; /* Full width for small screens */
+  }
+
+  .card-title {
+    font-size: 16px; /* Reduce font size for smaller screens */
+  }
+
+  .card-description {
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+}
+
+
+.floating-add-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+}
+
+.add-button {
+  width: 60px;
+  height: 60px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.6s ease;
+}
+
+.add-button:active {
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(122, 37, 37, 0.3);
+}
+
+.card-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 16px;
+}
+
+.add-button {
+  width: 60px;
+  height: 60px;
+  background-color: #ff5722;
+  color: #fff;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #ff3d00;
+}
+
+.show-description-button {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(90, 53, 18, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
+
+.modal-content h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.modal-content p {
+  margin-bottom: 8px;
+}
+
+.modal-content pre {
+  background-color: #f8f8f8;
+  padding: 8px;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.modal-content button {
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: none;
+  background-color: #da7f36;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.modal-content button submit {
+  background-color: #da6536;
+}
+.modal-buttons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 1px;
+}
+
+.modal-content button:first-child {
+  margin-right: 8px;
+  background-color: #dc3545;
+}
+
+.modal-input {
+  margin-bottom: 16px;
+}
+
+.modal-input label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.modal-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-input input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+.modal-input input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+.card-remove-button {
+  position: relative;
+}
+
+.remove-button {
+  background-color: #ff0000;
+  color: #ffffff;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 4px;
+  position: absolute;
+  top: -55px;
+  right: -5px;
+}
+
+.remove-button:hover {
+  background-color: #cc0000;
+}
+
+.remove-button:focus {
+  outline: none;
+  box-shadow: 0 0 4px #ff0000;
+}

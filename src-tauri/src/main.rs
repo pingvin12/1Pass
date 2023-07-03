@@ -7,7 +7,9 @@ use app::db::commands;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![commands::auth, commands::register, commands::me, commands::init_hosting])
+        .plugin(tauri_plugin_log::Builder::default().build())
+        .invoke_handler(tauri::generate_handler![commands::auth, commands::register, commands::me, commands::init_hosting,
+            commands::get_secrets, commands::create_secret, commands::delete_secret])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

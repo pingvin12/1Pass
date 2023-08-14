@@ -2,12 +2,12 @@ use argon2::{
     password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
 };
-use base64::{Engine, engine};
+use base64::{engine, Engine};
 use magic_crypt::{new_magic_crypt, MagicCryptTrait};
 use once_cell::sync::Lazy;
 
-use std::sync::Mutex;
 use getrandom::getrandom;
+use std::sync::Mutex;
 extern crate keyring;
 
 static ENCRYPTION_KEY: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new("".to_owned()));

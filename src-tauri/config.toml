@@ -1,0 +1,2 @@
+
+connection = "postgres://postgres:123@localhost:5432/onepass?application_name=onepass&options=-c search_path%3Ddev"

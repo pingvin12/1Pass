@@ -1,7 +1,7 @@
-use std::time::SystemTime;
-use diesel::sql_types::Text;
 use crate::schema::users;
-use serde::{Serialize, Deserialize};
+use diesel::sql_types::Text;
+use serde::{Deserialize, Serialize};
+use std::time::SystemTime;
 
 #[derive(Queryable, Deserialize, Serialize, Ord, Eq, PartialEq, PartialOrd)]
 pub struct User {
@@ -28,7 +28,7 @@ pub struct UserQuery {
     #[sql_type = "Text"]
     pub email: String,
     #[sql_type = "Text"]
-    pub id: i32
+    pub id: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -36,5 +36,5 @@ pub struct IdentifiedUser {
     pub username: String,
     pub email: String,
     pub userid: i32,
-    pub exp: usize
+    pub exp: usize,
 }

@@ -1,7 +1,7 @@
-use std::time::SystemTime;
-use diesel::{sql_types::*, BelongingToDsl};
 use crate::schema::secrets;
-use serde::{Serialize, Deserialize};
+use diesel::{sql_types::*, BelongingToDsl};
+use serde::{Deserialize, Serialize};
+use std::time::SystemTime;
 
 #[derive(Queryable, Serialize, Ord, Eq, PartialEq, PartialOrd, Clone, Debug, AsChangeset)]
 pub struct Secret {

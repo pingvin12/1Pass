@@ -1,7 +1,7 @@
-use std::time::SystemTime;
-use diesel::{sql_types::Text, query_dsl::LoadQuery};
 use crate::schema::news;
-use serde::{Serialize, Deserialize};
+use diesel::{query_dsl::LoadQuery, sql_types::Text};
+use serde::{Deserialize, Serialize};
+use std::time::SystemTime;
 
 #[derive(Serialize, Ord, Eq, PartialEq, PartialOrd, Clone, Debug, AsChangeset, Queryable)]
 #[table_name = "news"]

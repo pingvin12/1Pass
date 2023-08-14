@@ -1,5 +1,5 @@
 pub mod encryption_tests {
-    use app::db::encryption;
+    use onepass::db::encryption;
 
     #[test]
     pub fn encrypt_data_success() {
